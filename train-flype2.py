@@ -14,7 +14,7 @@ from meta_dataset import Blip2MMDataset, collate
 from utils import move_to_cuda
 from transformers import Trainer, EarlyStoppingCallback, TrainingArguments, IntervalStrategy
 import numpy as np
-import wandb
+# import wandb
 from scorer.subtask_1 import evaluate
 
 
@@ -59,8 +59,6 @@ def train_flype(data_dir, split, train_fpath, valid_fpath, args):
     )
 
     # load model
-    # processor = AutoProcessor.from_pretrained("Salesforce/blip-itm-base-coco")        # baseline
-    # model_config = Blip2Config.from_pretrained("Salesforce/blip-itm-base-coco")
     model_config = Blip2Config.from_pretrained(args.backbone)
     model_config.pr_seq_len = args.pr_seq_len
     model_config.use_itm_head = args.use_itm_head
@@ -69,6 +67,7 @@ def train_flype(data_dir, split, train_fpath, valid_fpath, args):
     model_config.emb_init_mode = args.emb_init_mode
     model_config.prefix_projection = True
     model = FLYPE(model_config).cuda()
+    model.load_custom_weights()
     # model = torch.nn.DataParallel(model)
 
     # Dataset and DataLoader
@@ -106,11 +105,12 @@ def test_model(data_dir, split, test_fpath, results_fpath, model_id='flype', arg
     model_config.weight = args.weight
     model_config.num_heads = args.heads
     model_config.emb_init_mode = args.emb_init_mode
-    model = FLYPE(model_config).to(device)
+    model = FLYPE(model_config)
 
-    state_dict = torch.load("checkpoints/flype_opt/bs_{}_lr{}_seq_len{}_epochs{}.pt".format(args.train_batch_size, args.lr, args.pr_seq_len, args.epochs))
-    model.load_state_dict(state_dict, strict=False)
+    model.load_custom_weights("checkpoints/flype_opt/bs_{}_lr{}_seq_len{}_epochs{}.pt".format(args.train_batch_size, args.lr, args.pr_seq_len, args.epochs))
+    # model.load_custom_weights("checkpoints/flype_opt/bs_20_lr0.001_seq_len5_epochs2.pt")
     model = model.cuda()
+    model.eval()
 
     test_dataset = Blip2MMDataset(test_fpath, data_dir, pretrained_model_path=args.backbone, max_text_length=args.max_text_length) # dev test
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=collate)
@@ -124,7 +124,7 @@ def test_model(data_dir, split, test_fpath, results_fpath, model_id='flype', arg
             with torch.no_grad():
                 outputs = model(**batch_dict)
                 prd = torch.sigmoid(outputs['logits']).item()
-            if prd > 0.35:
+            if prd > 0.48:
                 label = "Yes"
             else:
                 label = "No"
@@ -148,9 +148,9 @@ def main(config=None):
     parser.add_argument("--data-dir", "-d", required=False, type=str,
                         default="data/en/train_data",
                         help="The absolute path to the training data")
-    parser.add_argument("--heads", required=False, type=float, default=8,
+    parser.add_argument("--heads", required=False, type=float, default=4,
                         help="learning rate")
-    parser.add_argument("--lr", required=False, type=float, default=1e-4,
+    parser.add_argument("--lr", required=False, type=float, default=1e-3,
                         help="learning rate")
     parser.add_argument("--epochs", required=False, type=int, default=2,
                         help="epochs")
@@ -187,12 +187,12 @@ def main(config=None):
                         help="return dict during training. Turn it off to save VRAM")
     parser.add_argument("--pr-projection", required=False, type=bool, default=True,
                         help="project the prompts to a shared space")
-    parser.add_argument("--train-batch-size", required=False, type=int, default=8,
+    parser.add_argument("--train-batch-size", required=False, type=int, default=4,
                         help="training batch size")
     parser.add_argument("--test-batch-size", required=False, type=int, default=16,
                         help="test batch size")
     args = parser.parse_args()
-    wandb.init(entity='marvinpeng', project="blipitm")
+    # wandb.init(entity='marvinpeng', project="blipitm")
     # args.lr = config.lr
     # args.train_batch_size = config.train_batch_size
     # args.pr_seq_len = config.pr_seq_len
@@ -203,4 +203,5 @@ def main(config=None):
                                                 args.lr, args.pr_seq_len, args.epochs,), args)
 
 if __name__ == '__main__':
-    main(wandb.config)
+    main()
+    # main(wandb.config)

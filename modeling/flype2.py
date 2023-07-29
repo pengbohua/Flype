@@ -19,7 +19,7 @@ class FLYPE(Blip2Model, ABC):
     def __init__(self, config: Blip2Config):
         super().__init__(config)
 
-        lang_config = OPTConfig.from_pretrained('saleforce_opt')
+        lang_config = OPTConfig.from_pretrained('meta_opt')
         self.language_model = OPTForSequenceClassification(lang_config)
         self.config.pad_token_id = lang_config.pad_token_id
         self.config.num_attention_heads = config.text_config.num_attention_heads
@@ -54,6 +54,28 @@ class FLYPE(Blip2Model, ABC):
                 all_param += param.numel()
 
         print("Number of training parameters: {}M".format(all_param / 1000000))
+
+    def load_custom_weights(self, prompt_path=''):
+
+        pretrained_model = Blip2Model.from_pretrained("Salesforce/blip2-opt-2.7b")
+        pretrained_state_dict = pretrained_model.state_dict()
+        # Get your model's state_dict
+        model_state_dict = self.state_dict()
+
+        # Update your model's state_dict with the pretrained_state_dict
+        for name, param in pretrained_state_dict.items():
+            # Check that each layer in model matches the dimensions of the corresponding layer in pretrained_state_dict
+            if name in model_state_dict and model_state_dict[name].shape == pretrained_state_dict[name].shape:
+                model_state_dict[name] = param
+
+        self.load_state_dict(model_state_dict, strict=False)
+        print("Pretrained loaded successfully!")
+        if prompt_path:
+            prompt_state_dict = torch.load(prompt_path)
+            self.load_state_dict(prompt_state_dict, strict=False)
+            print("Prompts loaded successfully!")
+        else:
+            print("Prompts initialized from scratch!")
 
     def _encode(self, query_tokens, attention_mask=None, past_key_values=None, image_embeds=None, image_atts=None, return_dict=True):
         """
