@@ -117,11 +117,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+visualizer_flype_gradio.py
 # Spyder project settings
 .spyderproject
 .spyproject
-
+visualization/
 # Rope project settings
 .ropeproject
 

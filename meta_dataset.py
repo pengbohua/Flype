@@ -18,8 +18,7 @@ def collate(batch_dict):
         attention_masks.append(b_dict['attention_mask'])
         labels.append(b_dict['label'])
         pixel_values.append(b_dict['pixel_values'])
-        ids.append(b_dict['id'])
-    return {'id': ids,
+    return {
             'pixel_values': torch.cat(pixel_values, 0),
             'input_ids': torch.cat(input_ids, 0),
             'attention_mask': torch.cat(attention_masks, 0),
@@ -28,8 +27,9 @@ def collate(batch_dict):
 
 
 class Blip2MMDataset(Dataset):
-    def __init__(self, jsonl_file, data_dir, pretrained_model_path, max_text_length):
+    def __init__(self, jsonl_file, data_dir, pretrained_model_path, max_text_length=20):
         self.jsonl_file = [obj for obj in jsonlines.open(os.path.join(data_dir, jsonl_file))]
+        self.tweet_ids = [obj["tweet_id"] for obj in self.jsonl_file]
         self.data_dir = data_dir
         self.max_text_length = max_text_length
         self.processor = Blip2Processor.from_pretrained(pretrained_model_path)
@@ -48,7 +48,6 @@ class Blip2MMDataset(Dataset):
 
     def __getitem__(self, idx):
         obj = self.jsonl_file[idx]
-        tweet_id = obj["tweet_id"]
         image_path = os.path.join(self.data_dir, obj["image_path"])
         img = Image.open(image_path).convert("RGB")
         text = normalizeTweet(obj["tweet_text"])
@@ -61,12 +60,14 @@ class Blip2MMDataset(Dataset):
                        )
         label = obj["class_label"]
         label = self._convert_label(label)
-        return {"id": tweet_id, "pixel_values": inputs['pixel_values'], "input_ids": inputs['input_ids'], "attention_mask": inputs['attention_mask'], "label": label}
+        return {"pixel_values": inputs['pixel_values'], "input_ids": inputs['input_ids'], "attention_mask": inputs['attention_mask'], "label": label}
 
 
 if __name__ == '__main__':
     data_dir = "data/en/train_data"
     train_file = "CT23_1A_checkworthy_multimodal_english_train.jsonl"
     blip2dataset = Blip2MMDataset(train_file, data_dir, pretrained_model_path="Salesforce/blip2-opt-2.7b")
-    loader = iter(blip2dataset)
+    from torch.utils.data import DataLoader
+    loader = DataLoader(blip2dataset, batch_size=2, collate_fn=collate, shuffle=False, drop_last=False)
+    loader = iter(loader)
     print(next(loader))
