@@ -8,16 +8,16 @@ As shown in the following figures, we propose parameter-efficient prompt-based l
 The method consists of two stages: a cross-modal continuous prompt tuning stage and a prompt fusion stage.
 <figure>
 <img src="./assets/flype.png" style="width: 76%:"/>
-    <figcaption>The universal model architecture of FLYPE, cross-modal prompt tuning for large visual language models</figcaption>
+    <figcaption style="text-align: center;">Figure 1. The universal model architecture of FLYPE, cross-modal prompt tuning for large visual language models</figcaption>
 </figure>
 
 <figure>
 <img src="./assets/prompt_fusion.png" style="width: 76%;"/>
-    <figcaption>Prompt fusion for multi-task learning</figcaption>
+    <figcaption style="text-align: center;">Figure 2. Prompt fusion for multi-task learning</figcaption>
 </figure>
 
 ## Run the code
-Run the following code to find the hypers for your favorite task
+Run the following code to find the hypers for your favorite task.
 ```python
 python sweep.py
 wandb agent  Entity/ProjectName/SweepID
