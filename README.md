@@ -1,7 +1,9 @@
 # Flype :flying_disc: : Foundational Models for Parameter Efficient Visual Language Understanding
 
 ## Update
-Find our demo at ![Demo](https://6ca8e92afa2a7ec034.gradio.live/). ![Secondary Link](flype.mtop.uk:7007)
+Find our demo at flype.mtop.uk:7007, 
+
+or at https://6ca8e92afa2a7ec034.gradio.live/.
 ## Overview
 To perform parameter-efficient visual language classification, we select the VQA foundation model, BLIP-2. 
 As shown in the following figures, we propose parameter-efficient prompt-based learning, FLYPE, for visual language understanding in computational social science (CSS). 
