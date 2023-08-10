@@ -1,7 +1,7 @@
 # Flype :flying_disc: : Foundational Models for Parameter Efficient Visual Language Understanding
 
 ## Update
-Find our demo at flype.mtop.uk:7007, 
+Find our demo at http://flype.mtop.uk:7007, 
 
 or at https://6ca8e92afa2a7ec034.gradio.live/.
 ## Overview
