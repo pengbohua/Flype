@@ -27,6 +27,6 @@ wandb agent  Entity/ProjectName/SweepID
 ## Multi-task prompt tuning performance
 
 <figure>
-<img src="./assets/demo.png" style="width: 76%;"/>
+<img src="./assets/demo.jpg" style="width: 76%;"/>
     <figcaption style="text-align: center">Figure 3. Comparison between the performance of task-specific prompt tuning and prompt fusion.</figcaption>
 </figure>
