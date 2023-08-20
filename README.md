@@ -19,8 +19,14 @@ The method consists of two stages: a cross-modal continuous prompt tuning stage 
 </figure>
 
 ## Run the code
-Run the following code to find the hypers for your favorite task.
+Run the following code for your favorite task.
 ```python
 python sweep.py
 wandb agent  Entity/ProjectName/SweepID
 ```
+## Multi-task prompt tuning performance
+
+<figure>
+<img src="./assets/demo.png" style="width: 76%;"/>
+    <figcaption style="text-align: center">Figure 3. Comparison between the performance of task-specific prompt tuning and prompt fusion.</figcaption>
+</figure>
