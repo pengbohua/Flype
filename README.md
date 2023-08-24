@@ -10,7 +10,7 @@ As shown in the following figures, we propose parameter-efficient prompt-based l
 The method consists of two stages: a cross-modal continuous prompt tuning stage and a prompt fusion stage.
 <figure>
 <img src="./assets/flype.png" style="width: 76%:"/>
-    <figcaption style="text-align: center">Fig. 1 FLYPE meta classifier: FLYPE utilizes a Query Transformer, or Q-former, and an LLM decoder. The soft instruction tokens prompts the Q-former that hinges text and image modalities with little training cost.</figcaption>
+    <figcaption style="text-align: center">Fig. 1 FLYPE utilizes a Query Transformer, or Q-former, and an LLM decoder. The Q-former is coloured in purple in Figure 1. The soft instruction tokens prompt the Q-former that hinges text and image modalities with little training cost. FLYPE predicts final labels based on visual query tokens from the Q-former and the last token of the LLM decoder.</figcaption>
 </figure>
 
 <figure>
