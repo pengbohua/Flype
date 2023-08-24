@@ -10,7 +10,7 @@ As shown in the following figures, we propose parameter-efficient prompt-based l
 The method consists of two stages: a cross-modal continuous prompt tuning stage and a prompt fusion stage.
 <figure>
 <img src="./assets/flype.png" style="width: 76%:"/>
-    <figcaption style="text-align: center">Fig. 1 FLYPE meta model: Most parameters are frozen, except for the cross-modal prompt (grey), visual queries (colorful), and fully connected layers (FC). The cross-modal prompts hinge text and image, bootstrapping related image features for low data resource tasks.</figcaption>
+    <figcaption style="text-align: center">Fig. 1 FLYPE meta classifier: FLYPE utilizes a Query Transformer, or Q-former, and an LLM decoder. The soft instruction tokens prompts the Q-former that hinges text and image modalities with little training cost.</figcaption>
 </figure>
 
 <figure>
