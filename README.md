@@ -1,7 +1,9 @@
 # Flype :flying_disc: : Foundational Models for Parameter Efficient Visual Language Understanding
 
 ## Update
-Find our demo at http://flype.mtop.uk, or at [BackupLink](https://5e0cf93cee8f318447.gradio.live)
+Find our demo at http://flype.mtop.uk, or at [BackupLink](https://d56ed41c062f6a1259.gradio.live)
+
+The zero-shot caption model baseline is at http://flypecaption.mtop.uk, or at [BackupLink](https://6d1d9e332742f43993.gradio.live)
 
 Our winning model written in [LAVIS](https://github.com/salesforce/LAVIS) for [CheckThat!](https://checkthat.gitlab.io/clef2023/task1/) is now available at [Flype-LAVIS](https://github.com/pengbohua/Flype-LAVIS)!
 ## Overview
